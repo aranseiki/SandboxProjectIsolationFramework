@@ -1,0 +1,57 @@
+{
+    "MetaData": {
+        "Name": "WindowsConfigManager",
+        "Description": "Pipeline Script Configuration for Windows Sandbox",
+        "Version": "1.0.0"
+    },
+    "Variables": [
+        {
+            "Name": "RepoUrl",
+            "Value": "https://github.com/aranseiki/WindowsConfigManager.git",
+            "Type": "Machine",
+            "Required": true
+        },
+        {
+            "Name": "HostProjectPath",
+            "Value": "C:/SandboxProjectIsolationFramework",
+            "Type": "Machine",
+            "Required": true
+        },
+        {
+            "Name": "ProjectScriptPath",
+            "Value": "WindowsConfigManager.ps1",
+            "Type": "Machine",
+            "Required": true
+        },
+        {
+            "Name": "ArgumentScript",
+            "Value": "",
+            "Type": "User",
+            "Required": false
+        },
+        {
+            "Name": "ProjectName",
+            "Value": "ProjectName",
+            "Type": "Machine",
+            "Required": true
+        },
+        {
+            "Name": "TempPath",
+            "Value": "C:/SandboxProjectIsolationFramework/Temp",
+            "Type": "User",
+            "Required": false
+        },
+        {
+            "Name": "LogPath",
+            "Value": "C:/SandboxProjectIsolationFramework/Temp/Logs",
+            "Type": "User",
+            "Required": false
+        },
+        {
+            "Name": "CurrentDateFormat",
+            "Value": "CurrentDateFormat",
+            "Type": "User",
+            "Required": false
+        }
+    ]
+}
