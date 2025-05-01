@@ -2,13 +2,12 @@
   <Networking>Default</Networking>
   <MappedFolders>
     <MappedFolder>
-      <HostFolder>E:\projects\users\aranseiki\SandboxProjectIsolationFramework\WindowsConfigManager</HostFolder>
+      <HostFolder>E:\projects\users\aranseiki\programmingLanguages\POWERSHELL\SandboxProjectIsolationFramework</HostFolder>
       <SandboxFolder>C:\SandboxProjectIsolationFramework</SandboxFolder>
     </MappedFolder>
   </MappedFolders>
   <LogonCommand>
     <Command>explorer.exe C:</Command>
-    <Command>powershell.exe -ExecutionPolicy Bypass -File "C:\SandboxProjectIsolationFramework\WindowsConfigManager-SandboxEnvironments.ps1"</Command>
-    <!-- <Command>powershell.exe -ExecutionPolicy Bypass -File "C:\SandboxProjectIsolationFramework\WindowsConfigManager-SandboxPipeline.ps1"</Command> -->
+    <Command>powershell.exe -ExecutionPolicy Bypass -File "C:\SandboxProjectIsolationFramework\WindowsSandbox-Run.ps1"</Command>
   </LogonCommand>
 </Configuration>
