@@ -17,16 +17,9 @@ if (Test-Path $RepoPath) {
 
     Write-Output "Aguardando o diretório do repositório ser removido..."
     Copy-LogToLogPath -DefaultLogPath $DefaultLogPath -LogPath $LogPath
-    $Contagem = 0
-    $ContagemLimite = 5
-    while ((Test-Path -Path $RepoPath) -and ($Contagem -lt $ContagemLimite)) {
-        Start-Sleep -Seconds 1
-        $contagem = $Contagem + 1
-        Write-Output "Tentativa $Contagem de $ContagemLimite."
-        Copy-LogToLogPath -DefaultLogPath $DefaultLogPath -LogPath $LogPath
-    }
 
-    if ($Contagem -gt $ContagemLimite) {
+    $WaitPathResult = Wait-Path -Path $RepoPath -TimeoutLimit 5 -Mode 'Exists'
+    if (-not $WaitPathResult) {
         Write-Output "Erro: O diretório do repositório não foi removido."
         Copy-LogToLogPath -DefaultLogPath $DefaultLogPath -LogPath $LogPath
 
