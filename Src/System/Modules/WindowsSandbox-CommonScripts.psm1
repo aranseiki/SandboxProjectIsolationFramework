@@ -101,8 +101,7 @@ function New-LogPath {
 
     if ($LogPath) {
         if (-not (Test-Path $LogPath)) {
-            New-Item -Path $LogPath -ItemType Directory
-            Write-Output "Criando diretório de log: $LogPath"
+            New-Item -Path $LogPath -ItemType 'Directory' -Force | Out-Null
         }
     }
 
@@ -116,12 +115,93 @@ function New-TempPath {
 
     if ($TempPath) {
         if (-not (Test-Path $TempPath)) {
-            New-Item -Path $TempPath -ItemType Directory
-            Write-Output "Criando diretório temporário: $TempPath"
+            New-Item -Path $TempPath -ItemType Directory -Force | Out-Null
         }
     }
 
     return $TempPath
+}
+
+function New-TempErrorFile {
+    param (
+        [string] $Path,
+        [string] $ErrorFileName
+    )
+
+    if (-not (Test-Path -Path $Path)) {
+        throw "The path needs to exist."
+    }
+
+    $ErrorFile = "$Path/$ErrorFileName.error"
+    New-Item -Path $ErrorFile `
+        -ItemType 'File' `
+        -Force | Out-Null
+
+    return $ErrorFile
+}
+
+function Set-EnvironmentVariable {
+    param (
+        [string] $EnvironmentVariableName,
+        [string] $EnvironmentVariableValue,
+        [System.EnvironmentVariableTarget] $EnvironmentVariableType
+    )
+
+    try {
+        [System.Environment]::SetEnvironmentVariable(
+            $EnvironmentVariableName,
+            $EnvironmentVariableValue,
+            $EnvironmentVariableType
+        )
+        $SetEnvironmentVariableResult = "Variável definida com sucesso."
+        $SetEnvironmentVariableResultType = "OK"
+    }
+    catch {
+        $SetEnvironmentVariableResult = "Erro ao definir variável: $($_.Exception.Message)"
+        $SetEnvironmentVariableResultType = "ERROR"
+    }
+    
+    return @{
+        "Message" = $SetEnvironmentVariableResult
+        "MessageType" = $SetEnvironmentVariableResultType
+    }
+}
+
+function Wait-Path {
+    param (
+        [string] $Path,
+        [int] $TimeoutLimit,
+        [ValidateSet("Exists", "NotExists")]
+        [string] $Mode
+    )
+
+    $PathExists = switch ($Mode.ToUpper()) {
+        'EXISTS' { $true }
+        'NOTEXISTS' { $false }
+        Default {
+            Throw "Modo de aguarde '$Mode' incorreto para caminho '$Path'."
+        }
+    }
+
+    $TimeCount = 0
+    while (
+        ((Test-Path -Path $Path) -ne $PathExists) -and
+        ($TimeCount -lt $TimeoutLimit)
+    ) {
+        Start-Sleep -Seconds 1
+        $TimeCount = $TimeCount + 1
+
+        if ((Test-Path -Path $Path) -eq $PathExists) {
+            break
+        }
+    }
+
+    $ReturnAction = $true
+    if ($TimeCount -gt $TimeoutLimit) {
+        $ReturnAction = $false
+    }
+
+    return $ReturnAction
 }
 
 Export-ModuleMember `
@@ -131,4 +211,7 @@ Export-ModuleMember `
         New-DefaultLogPath,
         New-DefaultTempPath,
         New-LogPath,
-        New-TempPath
+        New-TempErrorFile,
+        New-TempPath,
+        Set-EnvironmentVariable,
+        Wait-Path
