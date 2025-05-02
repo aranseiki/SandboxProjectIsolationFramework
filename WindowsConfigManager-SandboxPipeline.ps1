@@ -1,13 +1,23 @@
 ﻿# pipeline.ps1: Pipeline que instala Git, clona repositório e executa script
 
+param (
+    [Parameter(Mandatory = $true, HelpMessage = "Caminho raiz do projeto onde deve conter os scripts de execução das funções internas.")]
+    [string] $ScriptRootPath,
+    
+    [Parameter(Mandatory = $true, HelpMessage = "Configuração da Pipeline.")]
+    [PSCustomObject] $PipelineConfiguration
+)
+
 ### PIPELINE IMPORTS ###
-Import-Module -Name "$PSScriptRoot/scripts/System/Modules/WindowsSandbox-SandboxCommonScripts.psm1" -Force
+Import-Module -Name "$ScriptRootPath/Src/System/Modules/WindowsSandbox-CommonScripts.psm1" `
+    -Force `
+    -ErrorAction Stop
 
 ### PIPELINE SCRIPT ###
 
 # 2. Criando um diretório temporário para salvar arquivos do pipeline
-$DefaultTempPath = New-DefaultTempPath -DefaultTempPath "C:/Temp"
-$DefaultLogPath = New-DefaultLogPath -DefaultLogPath "$DefaultTempPath/Log"
+$DefaultTempPath = New-DefaultTempPath -DefaultTempPath "$ScriptRootPath/Output/Temp"
+$DefaultLogPath = New-DefaultLogPath -DefaultLogPath "$ScriptRootPath/Output/Logs"
 
 # 3. Definindo as variáveis de ambiente
 Write-Output "Definindo os parâmetros das variáveis de ambiente."
