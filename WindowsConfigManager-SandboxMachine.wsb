@@ -7,7 +7,13 @@
     </MappedFolder>
   </MappedFolders>
   <LogonCommand>
+    <!-- Setting defaut theme -->
+    <Command>powershell.exe -ExecutionPolicy Bypass -Command "explorer.exe "C:\SandboxProjectIsolationFramework\Assets\WindowsBlackTheme.deskthemepack"; Start-Sleep -Seconds 2; Stop-Process -Name SystemSettings -ErrorAction Continue | Out-Null"</Command>
+
+    <!-- Opening C Drive -->
     <Command>explorer.exe C:</Command>
+    
+    <!-- Run scripts -->
     <Command>powershell.exe -ExecutionPolicy Bypass -File "C:\SandboxProjectIsolationFramework\WindowsSandbox-Run.ps1"</Command>
   </LogonCommand>
 </Configuration>
