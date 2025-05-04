@@ -9,6 +9,7 @@ param (
 )
 
 ### PIPELINE IMPORTS ###
+
 Import-Module -Name "$ScriptRootPath/Src/System/Modules/WindowsSandbox-CommonScripts.psm1" `
     -Force `
     -ErrorAction Stop

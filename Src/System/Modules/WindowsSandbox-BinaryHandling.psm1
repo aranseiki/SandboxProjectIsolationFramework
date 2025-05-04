@@ -1,3 +1,12 @@
+function Invoke-Executable {
+    param (
+        [string] $ExecutableFile,
+        [array] $ArgumentList,
+        [bool] $Wait = $true
+    )
+    Start-Process -FilePath $ExecutableFile -ArgumentList $ArgumentList -Wait:$Wait
+}
+
 function New-InstallerPath {
     param (
         [string] $InstallerPath
@@ -30,11 +39,7 @@ function Receive-Installer {
     }
 }
 
-function Invoke-Executable {
-    param (
-        [string] $ExecutableFile,
-        [array] $ArgumentList,
-        [bool] $Wait = $true
-    )
-    Start-Process -FilePath $ExecutableFile -ArgumentList $ArgumentList -Wait:$Wait
-}
+Export-ModuleMember `
+    -Function Invoke-Executable, `
+        New-InstallerPath, `
+        Receive-Installer

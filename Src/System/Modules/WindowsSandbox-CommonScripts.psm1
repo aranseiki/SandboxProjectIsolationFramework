@@ -68,19 +68,6 @@ function Get-PipelineConfiguration {
     return $ConfigurationContent
 }
 
-function New-DefaultTempPath {
-    param (
-        [string] $DefaultTempPath
-    )
-
-    if (-not (Test-Path $DefaultTempPath)) {
-        New-Item -Path $DefaultTempPath -ItemType 'Directory' -Force | Out-Null
-        Write-Output "Criando diretório temporário: $DefaultTempPath"
-    }
-
-    return $DefaultTempPath
-}
-
 function New-DefaultLogPath {
     param (
         [string] $DefaultLogPath
@@ -92,6 +79,19 @@ function New-DefaultLogPath {
     }
 
     return $DefaultLogPath
+}
+
+function New-DefaultTempPath {
+    param (
+        [string] $DefaultTempPath
+    )
+
+    if (-not (Test-Path $DefaultTempPath)) {
+        New-Item -Path $DefaultTempPath -ItemType 'Directory' -Force | Out-Null
+        Write-Output "Criando diretório temporário: $DefaultTempPath"
+    }
+
+    return $DefaultTempPath
 }
 
 function New-LogPath {
@@ -106,20 +106,6 @@ function New-LogPath {
     }
 
     return $LogPath
-}
-
-function New-TempPath {
-    param (
-        [string] $TempPath
-    )
-
-    if ($TempPath) {
-        if (-not (Test-Path $TempPath)) {
-            New-Item -Path $TempPath -ItemType Directory -Force | Out-Null
-        }
-    }
-
-    return $TempPath
 }
 
 function New-TempErrorFile {
@@ -138,6 +124,20 @@ function New-TempErrorFile {
         -Force | Out-Null
 
     return $ErrorFile
+}
+
+function New-TempPath {
+    param (
+        [string] $TempPath
+    )
+
+    if ($TempPath) {
+        if (-not (Test-Path $TempPath)) {
+            New-Item -Path $TempPath -ItemType Directory -Force | Out-Null
+        }
+    }
+
+    return $TempPath
 }
 
 function Set-EnvironmentVariable {
