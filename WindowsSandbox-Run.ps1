@@ -16,6 +16,6 @@ $PipelineConfiguration = Get-PipelineConfiguration `
     -ScriptRootPath $ScriptRootPath `
     -PipelineConfiguration $PipelineConfiguration
 
-# & "$ScriptRootPath/WindowsConfigManager-SandboxPipeline.ps1" `
-#     -ScriptRootPath $ScriptRootPath `
-#     -PipelineConfiguration $PipelineConfiguration
+& "$ScriptRootPath/WindowsConfigManager-SandboxPipeline.ps1" `
+    -ScriptRootPath $ScriptRootPath `
+    -PipelineConfiguration $PipelineConfiguration
