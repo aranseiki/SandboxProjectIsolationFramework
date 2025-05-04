@@ -9,6 +9,7 @@ param (
 )
 
 ### PIPELINE IMPORTS ###
+
 Import-Module -Name "$ScriptRootPath/Src/System/Modules/WindowsSandbox-CommonScripts.psm1" `
     -Force `
     -ErrorAction Stop
@@ -17,7 +18,6 @@ Import-Module -Name "$ScriptRootPath/Src/System/Modules/WindowsSandbox-CommonScr
 
 # 2. Criando um diretório temporário para salvar arquivos do pipeline
 $DefaultTempPath = New-DefaultTempPath -DefaultTempPath "$ScriptRootPath/Output/Temp"
-$DefaultLogPath = New-DefaultLogPath -DefaultLogPath "$ScriptRootPath/Output/Logs"
 
 # 3. Definindo as variáveis de ambiente
 Write-Output "Definindo os parâmetros das variáveis de ambiente."
@@ -115,18 +115,11 @@ foreach ($VariavelAtual in $ConfiguracaoJSON.Variaveis) {
 
 # 4. Verificando diretório temporário para criar o diretório caso necessário
 Write-Output "Verificando se o diretório temporário existe."
-$TempPath = New-TempPath -TempPath $TempPath
+New-TempPath -TempPath $TempPath
 
 # 5. Verificando diretório de log para criar o diretório caso necessário
 Write-Output "Verificando se o diretório de log existe."
-$LogPath = New-LogPath -LogPath $LogPath
-
-# 6. Definindo o formato da data atual
-Write-Output "Definindo o formato da data atual."
-$DateFormat = $DefaultCurrentDateFormat
-if ($CurrentDateFormat) {
-    $DateFormat = $CurrentDateFormat
-}
+New-LogPath -LogPath $LogPath
 
 # 5 Definindo o caminho do projeto a partir do diretório
 #   temporário definido pelo usuário ou valor padrão
@@ -135,31 +128,20 @@ if ($TempPath) {
     $ProjectPath = $TempPath
 }
 
-& "$HostProjectPath\scripts\Shared\SandboxShared-InstallGit.ps1" `
-    -ScriptRootPath $PSScriptRoot `
+& "$ScriptRootPath/Src/Shared/Scripts/WindowsSandbox-InstallGit.ps1" `
+    -ScriptRootPath $ScriptRootPath `
+    -ProjectPath $ProjectPath
+
+& "$ScriptRootPath/Src/Shared/Scripts/WindowsSandbox-RunGitClone.ps1" `
+    -ScriptRootPath $ScriptRootPath `
     -ProjectPath $ProjectPath `
-    -DefaultLogPath $DefaultLogPath `
-    -LogPath $LogPath
+    -GitRepositoryUrl $GitRepositoryUrl
+
+& "$ScriptRootPath/Src/Shared/Scripts/WindowsSandbox-RunMainScript.ps1" `
+    -ScriptRootPath $ScriptRootPath `
+    -ProjectPath $ProjectPath `
+    -GitRepositoryUrl $GitRepositoryUrl `
+    -ProjectFileFilter $ProjectFileFilter `
+    -ArgumentScript $ArgumentScript
 
 exit 0
-
-# 5. Criando o arquivo de log, inicializando o transcript com ele
-$CurrentDate = Get-CurrentDate -CurrentDateFormat $DateFormat
-$PipelineLog = "$ProjectName-SandboxLog_$($CurrentDate).txt"
-$LogFile = "$LogPath/$PipelineLog"
-
-Start-Transcript -Path $LogFile -Append -Force
-Write-Output "Iniciando transcript de log."
-
-# 7. Copiando o arquivo de log para o diretório de log Host
-Copy-LogToLogPath -DefaultLogPath $DefaultLogPath -LogPath $LogPath -AutoLog
-
-
-
-
-
-
-# 23. Finalizando o transcript de log
-# Write-Output "Finalizando o transcript de log."
-# Copy-LogToLogPath -DefaultLogPath $DefaultLogPath -LogPath $LogPath
-# Stop-Transcript
