@@ -14,4 +14,17 @@ function Get-GitReleaseVersionURL {
     return $InstallerURL
 }
 
-Export-ModuleMember -Function Get-GitReleaseVersionURL
+function Get-GitRepositoryName {
+    param (
+        [string] $GitRepositoryUrl
+    )
+
+    $RepositoryName = $GitRepositoryUrl -split '/' | Select-Object -Last 1
+    $RepositoryName = $RepositoryName -replace '.git', ''
+
+    return $RepositoryName
+}
+
+Export-ModuleMember `
+    -Function Get-GitReleaseVersionURL, `
+        Get-GitRepositoryName
